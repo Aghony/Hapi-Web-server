@@ -39,7 +39,7 @@ npm run start
 
 Bila Anda melihat pesan “Halo, kita akan belajar membuat server menggunakan Hapi”, maka proyek telah siap digunakan.
 
-**Membuat HTTP Server**
+## Membuat HTTP Server
 
 Untuk membuat HTTP server menggunakan Hapi, kita tidak lagi menggunakan core module http secara langsung. Namun, kita akan membuat server melalui modul pihak ketiga @hapi/hapi. Untuk menggunakan modul tersebut, kita perlu memasang terlebih dahulu melalui NPM dengan perintah.
 
@@ -127,10 +127,11 @@ ouput : {"statusCode":404,"error":"Not Found","message":"Not Found"};
 */
 ```
 
-**Method/Verb Request dan Routing**
-Setelah membuat dan menjalankan server, selanjutnya adalah menambahkan routing agar server dapat merespons permintaan sesuai dengan method dan url yang diminta oleh client.
+## Method/Verb Request dan Routing
 
-Routing pada Hapi tidak dilakukan di dalam request handler seperti cara native. Namun, ia memanfaatkan objek [route configuration](https://hapi.dev/api/?v=20.3.0#-serverrouteroute)*server.route()*. Lihat kode yang ditebalkan yah.
+etelah membuat dan menjalankan server, selanjutnya adalah menambahkan routing agar server dapat merespons permintaan sesuai dengan method dan url yang diminta oleh client.
+
+Routing pada Hapi tidak dilakukan di dalam request handler seperti cara native. Namun, ia memanfaatkan objek [route configuration](https://hapi.dev/api/?v=20.3.0#-serverrouteroute)yang disimpan pada method _server.route()_. Lihat kode yang ditebalkan yah.
 
 ```
 const init = async () => {
@@ -153,13 +154,13 @@ const init = async () => {
 };
 ```
 
-Objek route configuration memiliki properti yang bisa dimanfaatkan untuk menspesifikasikan route yang diinginkan. Termasuk menspesifikasikan *method*,*path*.dan fungsi sebagai *handler*
+Objek route configuration memiliki properti yang bisa dimanfaatkan untuk menspesifikasikan route yang diinginkan. Termasuk menspesifikasikan _method_,_path_.dan fungsi sebagai _handler_
 untuk menangani permintaan tersebut (request handler).
 
 Tunggu, request handler dituliskan di dalam route configuration? Yap benar! Handler pada Hapi dipisahkan berdasarkan route yang ada. Setiap spesifikasi route memiliki handler-nya masing-masing. Dengan begitu, tentu kode akan lebih mudah dikelola. Anda bisa mengatakan selamat tinggal pada
 
-*if else*yang bersarang.
-Lalu, bagaimana cara menetapkan lebih dari satu route configuration dalam method*server.route()*? Mudah! Sebenarnya, *server.route()* selain dapat menerima route configuration, ia juga dapat menerima array dari route configuration. Jadi, Anda bisa secara mudah menentukan banyak spesifikasi route dengan seperti ini:
+_if else_ yang bersarang.
+Lalu, bagaimana cara menetapkan lebih dari satu route configuration dalam method _server.route()_? Mudah! Sebenarnya, _server.route()_ selain dapat menerima route configuration, ia juga dapat menerima array dari route configuration. Jadi, Anda bisa secara mudah menentukan banyak spesifikasi route dengan seperti ini:
 
 ```
 const init = async () => {
@@ -304,8 +305,8 @@ module.exports = routes;
 
 Tunggu, sepertinya ada beberapa hal baru yang belum Anda ketahui. Mari kita bedah kode yang ditebalkan yah.
 
-Anda bisa lihat beberapa properti *Method* memiliki nilai '_', itu artinya route dapat diakses menggunakan seluruh [method yang ada pada HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).
-Kemudian nilai '*/{any_}*' pada route paling akhir, ini berfungsi untuk menangani permintaan masuk pada *path* yang belum Anda tentukan. Ini merupakan salah satu teknik dalam menetapkan routing yang dinamis menggunakan Hapi.
+Anda bisa lihat beberapa properti _Method_ memiliki nilai '_', itu artinya route dapat diakses menggunakan seluruh [method yang ada pada HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).
+Kemudian nilai '\*/{any_}*' pada route paling akhir, ini berfungsi untuk menangani permintaan masuk pada *path\* yang belum Anda tentukan. Ini merupakan salah satu teknik dalam menetapkan routing yang dinamis menggunakan Hapi.
 
 Namun, routing dengan nilai dinamis seperti itu akan kalah kuatnya dengan nilai yang ditetapkan secara spesifik. Contohnya bila array route configuration memiliki nilai seperti ini:
 
@@ -338,7 +339,7 @@ Maka server akan mengembalikan “Homepage” karena route tersebut lebih spesif
 
 Oke, sudah paham? Jika sudah, mari kita lanjutkan.
 
-Setelah menetapkan nilai routes configuration, gunakan nilainya menggunakan method *server.route()* pada berkas *server.js*. lihat kode yang dihitamkan yah.
+Setelah menetapkan nilai routes configuration, gunakan nilainya menggunakan method _server.route()_ pada berkas _server.js_. lihat kode yang dihitamkan yah.
 
 **server.js**
 
@@ -362,7 +363,7 @@ const init = async () => {
 init();
 ```
 
-Simpan seluruh perubahan yang ada baik pada berkas routes.js dan server.js; jalankan ulang server dengan perintah *npm run start;* dan coba lakukan permintaan ke server. Seharusnya server sudah bisa merespons sesuai dengan yang diharapkan.
+Simpan seluruh perubahan yang ada baik pada berkas routes.js dan server.js; jalankan ulang server dengan perintah _npm run start;_ dan coba lakukan permintaan ke server. Seharusnya server sudah bisa merespons sesuai dengan yang diharapkan.
 
 ```
 curl -X GET http://localhost:5000
