@@ -129,9 +129,9 @@ ouput : {"statusCode":404,"error":"Not Found","message":"Not Found"};
 
 ## Method/Verb Request dan Routing
 
-etelah membuat dan menjalankan server, selanjutnya adalah menambahkan routing agar server dapat merespons permintaan sesuai dengan method dan url yang diminta oleh client.
+setelah membuat dan menjalankan server, selanjutnya adalah menambahkan routing agar server dapat merespons permintaan sesuai dengan method dan url yang diminta oleh client.
 
-Routing pada Hapi tidak dilakukan di dalam request handler seperti cara native. Namun, ia memanfaatkan objek [route configuration](https://hapi.dev/api/?v=20.3.0#-serverrouteroute)yang disimpan pada method _server.route()_. Lihat kode yang ditebalkan yah.
+Routing pada Hapi tidak dilakukan di dalam request handler seperti cara native. Namun, ia memanfaatkan objek [route configuration](https://hapi.dev/api/?v=20.3.0#-serverrouteroute) yang disimpan pada method _server.route()_. Lihat kode yang ditebalkan yah.
 
 ```
 const init = async () => {
