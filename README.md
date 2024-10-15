@@ -2,7 +2,7 @@
 
 Hapi adalah salah satu framework yang menyediakan enviromentyang lengkap untuk mengembangkan web server yang kompleks.
 namun Framework Hapi memiliki kelemahan yaitu abstraksinya yang terlalu jauh dari Node.js native.
-ini adalah <a href: "https://hapi.dev/tutorials/?lang=en_US">Dokumentasi hapi</a>
+ini adalah [Dokumentasi hapi](https://hapi.dev/tutorials/?lang=en_US)
 
 ## Materi
 
@@ -73,7 +73,7 @@ init();
 
 Mari kita bedah kodenya.
 
-HTTP server sendiri dibuat melalui method **Hapi.server()**. Method ini menerima satu parameter yakni [ServerOptions] (https://hapi.dev/api/?v=20.3.0#server.options). **ServerOptions** merupakan objek yang menampung konfigurasi dari server yang hendak dibuat, salah satunya kita bisa menetapkan properti **port** dan **host**.
+HTTP server sendiri dibuat melalui method **Hapi.server()**. Method ini menerima satu parameter yakni [ServerOptions](https://hapi.dev/api/?v=20.3.0#server.options). **ServerOptions** merupakan objek yang menampung konfigurasi dari server yang hendak dibuat, salah satunya kita bisa menetapkan properti **port** dan **host**.
 
 Proses menjalankan server (**server.start()**) dilakukan secara asynchronous. Karena itu, kita perlu menjalankannya di dalam fungsi **async** dan memanggil **server.start()** menggunakan **await**.
 
