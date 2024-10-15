@@ -10,7 +10,7 @@ const routes = [
     method: "*",
     path: "/",
     handler: (request, h) => {
-      return "Halaman tidak dapat di akses dengan method yang tersebut";
+      return "Halaman tidak dapat diakses dengan method tersebut";
     },
   },
   {
@@ -28,8 +28,21 @@ const routes = [
     },
   },
   {
-    method: '*',
-    path: '/{any}',
+    method: "GET",
+    path: "/hello/{name?}",
+    handler: (request, h) => {
+      const { name = "stranger" } = request.params;
+      const { lang } = request.query;
+
+      if(lang === 'id') {
+        return `Hai, ${name}!`;
+      }
+      return `Hello, ${name}!`;
+    },
+  },
+  {
+    method: "*",
+    path: "/{any}",
     handler: (request, h) => {
       return "Halaman tidak ditemukan";
     },
