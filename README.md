@@ -130,4 +130,249 @@ ouput : {"statusCode":404,"error":"Not Found","message":"Not Found"};
 **Method/Verb Request dan Routing**
 Setelah membuat dan menjalankan server, selanjutnya adalah menambahkan routing agar server dapat merespons permintaan sesuai dengan method dan url yang diminta oleh client.
 
-Routing pada Hapi tidak dilakukan di dalam request handler seperti cara native. Namun, ia memanfaatkan objek 
+Routing pada Hapi tidak dilakukan di dalam request handler seperti cara native. Namun, ia memanfaatkan objek [route configuration]([Dokumentasi hapi](https://hapi.dev/api/?v=20.3.0#-serverrouteroute)
+
+<p style="border: 1px solid red; padding: 5px;">server.route()</p>. Lihat kode yang ditebalkan yah.
+
+```
+const init = async () => {
+
+    const server = Hapi.server({
+        port: 5000,
+        host: 'localhost'
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/',
+        handler: (request, h) => {
+            return 'Hello World!';
+        }
+    });
+
+    await server.start();
+    console.log(`Server berjalan pada ${server.info.uri}`);
+};
+```
+
+Objek route configuration memiliki properti yang bisa dimanfaatkan untuk menspesifikasikan route yang diinginkan. Termasuk menspesifikasikan <p style="border: 1px solid red; padding: 5px;">method</p>,<p style="border: 1px solid red; padding: 5px;">path</p>.dan fungsi sebagai <p style="border: 1px solid red; padding: 5px;">handler</p>
+untuk menangani permintaan tersebut (request handler).
+
+Tunggu, request handler dituliskan di dalam route configuration? Yap benar! Handler pada Hapi dipisahkan berdasarkan route yang ada. Setiap spesifikasi route memiliki handler-nya masing-masing. Dengan begitu, tentu kode akan lebih mudah dikelola. Anda bisa mengatakan selamat tinggal pada
+
+<p style="border: 1px solid red; padding: 5px;">if else</p>yang bersarang.
+Lalu, bagaimana cara menetapkan lebih dari satu route configuration dalam method<p style="border: 1px solid red; padding: 5px;">server.route()</p>? Mudah! Sebenarnya, <p style="border: 1px solid red; padding: 5px;">server.route()</p> selain dapat menerima route configuration, ia juga dapat menerima array dari route configuration. Jadi, Anda bisa secara mudah menentukan banyak spesifikasi route dengan seperti ini:
+
+```
+const init = async () => {
+    const server = Hapi.server({
+        port: 5000,
+        host: 'localhost',
+    });
+
+    server.route([
+        {
+            method: 'GET',
+            path: '/',
+            handler: (request, h) => {
+                return 'Homepage';
+            },
+        },
+        {
+            method: 'GET',
+            path: '/about',
+            handler: (request, h) => {
+                return 'About Page';
+            },
+        },
+    ]);
+
+    await server.start();
+    console.log(`Server berjalan pada ${server.info.uri}`);
+};
+```
+
+Kami merekomendasi untuk memisahkan seluruh routes configuration pada berkas JavaScript berbeda. Dengan begitu, satu berkas JavaScript hanya memiliki satu fungsi atau tanggung jawab saja (single responsibility principle).
+**routes.js**
+
+```
+const routes = [
+    {
+        method: 'GET',
+        path: '/',
+        handler: (request, h) => {
+            return 'Homepage';
+        },
+    },
+    {
+        method: 'GET',
+        path: '/about',
+        handler: (request, h) => {
+            return 'About page';
+        },
+    },
+];
+
+module.exports = routes;
+```
+
+**server.js**
+
+```
+const Hapi = require('@hapi/hapi');
+const routes = require('./routes');
+
+const init = async () => {
+    const server = Hapi.server({
+        port: 5000,
+        host: 'localhost',
+    });
+
+    server.route(routes);
+
+    await server.start();
+    console.log(`Server berjalan pada ${server.info.uri}`);
+};
+
+init();
+```
+
+Latihan Routing
+Setelah mengetahui cara menspesifikasikan route pada Hapi, sekarang saatnya kita terapkan apa yang sudah kita ketahui pada web server yang sudah dibuat sebelumnya.
+
+Pada latihan kali ini, kita akan membuat routes configuration dengan ketentuan berikut:
+
+URL: ‘/’
+Method: GET
+Mengembalikan pesan “Homepage”.
+Method: <any> (selain method GET)
+Mengembalikan pesan “Halaman tidak dapat diakses dengan method tersebut”.
+URL: ‘/about’
+Method: GET
+Mengembalikan pesan “About page”.
+Method: <any> (selain method GET)
+Mengembalikan pesan “Halaman tidak dapat diakses dengan method tersebut”.
+URL: <any> (selain “/’ dan “/about”)
+Method: <any>
+Mengembalikan pesan “Halaman tidak ditemukan”.
+
+Yuk mulai!
+
+Agar kode lebih terkelompok, tulis route configuration pada berkas JavaScript terpisah. Silakan buat berkas JavaScript baru pada proyek hapi-web-server dengan nama **“routes.js”**. Kemudian, tuliskan kumpulan routes configuration dalam bentuk array sesuai dengan ketentuan.
+
+**routes.js**
+
+```
+const routes = [
+    {
+        method: 'GET',
+        path: '/',
+        handler: (request, h) => {
+            return 'Homepage';
+        },
+    },
+    {
+        method: '*',
+        path: '/',
+        handler: (request, h) => {
+            return 'Halaman tidak dapat diakses dengan method tersebut';
+        },
+    },
+    {
+        method: 'GET',
+        path: '/about',
+        handler: (request, h) => {
+            return 'About page';
+        },
+    },
+    {
+        method: '*',
+        path: '/about',
+        handler: (request, h) => {
+            return 'Halaman tidak dapat diakses dengan method';
+        },
+    },
+    {
+        method: '*',
+        path: '/{any*}',
+        handler: (request, h) => {
+            return 'Halaman tidak ditemukan';
+        },
+    },
+];
+
+module.exports = routes;
+```
+
+Tunggu, sepertinya ada beberapa hal baru yang belum Anda ketahui. Mari kita bedah kode yang ditebalkan yah.
+
+Anda bisa lihat beberapa properti <p style="border: 1px solid red; padding: 5px;">Method</p> memiliki nilai '_', itu artinya route dapat diakses menggunakan seluruh [method yang ada pada HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods).
+Kemudian nilai '<p style="border: 1px solid red; padding: 5px;">/{any_}</p>' pada route paling akhir, ini berfungsi untuk menangani permintaan masuk pada <p style="border: 1px solid red; padding: 5px;">path</p> yang belum Anda tentukan. Ini merupakan salah satu teknik dalam menetapkan routing yang dinamis menggunakan Hapi.
+
+Namun, routing dengan nilai dinamis seperti itu akan kalah kuatnya dengan nilai yang ditetapkan secara spesifik. Contohnya bila array route configuration memiliki nilai seperti ini:
+
+```
+const routes = [
+    {
+        method: '*',
+        path: '/',
+        handler: (request, h) => {
+            return 'Halaman tidak dapat diakses dengan method tersebut';
+        },
+    },
+    {
+        method: 'GET',
+        path: '/',
+        handler: (request, h) => {
+            return 'Homepage';
+        },
+    },
+];
+```
+
+Kemudian, client meminta request dengan spesifikasi berikut:
+
+```
+curl -X GET http://localhost:5000
+```
+
+Maka server akan mengembalikan “Homepage” karena route tersebut lebih spesifik.
+
+Oke, sudah paham? Jika sudah, mari kita lanjutkan.
+
+Setelah menetapkan nilai routes configuration, gunakan nilainya menggunakan method <p style="border: 1px solid red; padding: 5px;">server.route()</p> pada berkas <p style="border: 1px solid red; padding: 5px;">server.js</p>. lihat kode yang dihitamkan yah.
+
+**server.js**
+
+```
+const Hapi = require('@hapi/hapi');
+const routes = require('./routes');
+
+
+const init = async () => {
+    const server = Hapi.server({
+        port: 5000,
+        host: 'localhost',
+    });
+
+    server.route(routes);
+
+    await server.start();
+    console.log(`Server berjalan pada ${server.info.uri}`);
+};
+
+init();
+```
+
+Simpan seluruh perubahan yang ada baik pada berkas routes.js dan server.js; jalankan ulang server dengan perintah <p style="border: 1px solid red; padding: 5px;"> npm run start; </p> dan coba lakukan permintaan ke server. Seharusnya server sudah bisa merespons sesuai dengan yang diharapkan.
+
+```
+curl -X GET http://localhost:5000
+// output: Homepage
+curl -X GET http://localhost:5000/about
+// output: About page
+curl -X GET http://localhost:5000/test
+// output: Halaman tidak ditemukan
+curl -X POST http://localhost:5000
+// output: Halaman tidak dapat diakses dengan method tersebut
+```
